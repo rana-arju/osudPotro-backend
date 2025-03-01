@@ -1,15 +1,14 @@
 import QueryBuilder from '../../builder/QueryBuilder';
+import AppError from '../../error/AppError';
 import { medicineSearchableField } from './medicine.constant';
 import { IMedicine } from './medicine.interface';
 import { Medicine } from './medicine.schema';
-
 
 //create medicine
 const createMedicineIntoDB = async (medicineData: IMedicine) => {
   const result = await Medicine.create(medicineData);
   return result;
 };
-
 
 //Get All medicine
 const getAllMedicineFromDB = async (searchTerm: Record<string, unknown>) => {
@@ -24,20 +23,43 @@ const getAllMedicineFromDB = async (searchTerm: Record<string, unknown>) => {
 
   return { result, meta };
 };
-const getStudentFromDB = async (id: string) => {
-  const result = await Medicine.aggregate([{ $match: { _id: id } }]);
+const getSingleMedicine = async (id: string) => {
+  const result = await Medicine.findById(id);
+  if (!result) {
+    throw new AppError(404, 'This medicine not found!');
+  }
 
   return result;
 };
-const deleteStudentFromDB = async (id: string) => {
-  const result = await Medicine.updateOne({ _id: id }, { isDeleted: true });
-
+const deleteSingleMedicine = async (id: string) => {
+  const medicine = await Medicine.findById(id);
+  if (!medicine) {
+    throw new AppError(404, 'This medicine not found!');
+  }
+  const result = await Medicine.findByIdAndDelete(id);
   return result;
 };
-
+const updateSingleMedicine = async (
+  id: string,
+  payload: Partial<IMedicine>,
+) => {
+  const medicineExist = await Medicine.findById(id);
+  if (!medicineExist) {
+    throw new AppError(404, 'This medicine not found!');
+  }
+  const result = await Medicine.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  }).select('-__v');
+  if (!result) {
+    throw new AppError(400, `Medicine with ID ${id} not updated. try again`);
+  }
+  return result;
+};
 export const MedicineServices = {
   createMedicineIntoDB,
   getAllMedicineFromDB,
-  getStudentFromDB,
-  deleteStudentFromDB,
+  getSingleMedicine,
+  deleteSingleMedicine,
+  updateSingleMedicine,
 };

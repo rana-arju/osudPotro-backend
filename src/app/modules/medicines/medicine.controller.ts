@@ -32,55 +32,66 @@ const getAllMedicine = catchAsync(async (req, res) => {
 });
 
 
-const getStudent = async (req: Request, res: Response) => {
+// Single Product get controller
+const getSingleMedicine = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
 
-    // will call service func to send this data
-    const result = await MedicineServices.getStudentFromDB(id);
+    const result = await MedicineServices.getSingleMedicine(id);
 
-    // send response
-    res.status(200).json({
-      success: true,
-      message: 'Student get succesfully',
+    res.json({
+      status: true,
+      message: 'Medicine retrieved successfully',
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Someting went wrong',
-      error,
-    });
+    next(error);
   }
 };
-
 // student delete
 
-const deleteStudent = async (req: Request, res: Response) => {
+const deleteMedicine= catchAsync(async (req, res) => {
+  const { id} = req.params;
+
+  const result = await MedicineServices.deleteSingleMedicine(id);
+  sendResponse(res, {
+    statusCode: 200,
+    message: 'Medicine deleted successfully',
+    success: true,
+    data: result,
+  });
+});
+const updatMedicine = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const id = req.params.id;
+    const {id } = req.params;
+    const payload = req.body;
 
-    // will call service func to send this data
-    const result = await MedicineServices.deleteStudentFromDB(id);
+    const result = await MedicineServices.updateSingleMedicine(
+      id,
+      payload,
+    );
 
-    // send response
-    res.status(200).json({
-      success: true,
-      message: 'Student deleted succesful',
+    res.json({
+      status: true,
+      message: 'Medicine updated successfully',
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Someting went wrong',
-      error,
-    });
+    next(error);
   }
 };
-
 export const medicineController = {
   createMedicine,
   getAllMedicine,
-  getStudent,
-  deleteStudent,
+  getSingleMedicine,
+  deleteMedicine,
+  updatMedicine,
 };

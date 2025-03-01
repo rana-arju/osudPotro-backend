@@ -12,7 +12,12 @@ router.post(
   medicineController.createMedicine,
 );
 router.get('/', medicineController.getAllMedicine);
-router.get('/:id', medicineController.getStudent);
-router.delete('/:id', medicineController.deleteStudent);
+router.get('/:id', medicineController.getSingleMedicine);
+router.delete('/:id', medicineController.deleteMedicine);
+router.patch(
+  '/:id',
+  validationRequest(medicineValidationSchema),
+  medicineController.updatMedicine,
+);
 
 export const MedicineRoutes = router;
