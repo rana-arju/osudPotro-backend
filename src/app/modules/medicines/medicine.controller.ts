@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { MedicineServices } from './medicine.service';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 
 const createMedicine = async (
   req: Request,
@@ -18,26 +20,17 @@ const createMedicine = async (
     next(error);
   }
 };
+const getAllMedicine = catchAsync(async (req, res) => {
+  const result = await MedicineServices.getAllMedicineFromDB(req.query);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Medicine retrieved successfully',
+    data: result?.result,
+    meta: result?.meta,
+  });
+});
 
-const getAllStudent = async (req: Request, res: Response) => {
-  try {
-    // will call service func to send this data
-    const result = await MedicineServices.getAllStudentFromDB();
-
-    // send response
-    res.status(200).json({
-      success: true,
-      message: 'Students get succesfully',
-      data: result,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Someting went wrong',
-      error,
-    });
-  }
-};
 
 const getStudent = async (req: Request, res: Response) => {
   try {
@@ -87,7 +80,7 @@ const deleteStudent = async (req: Request, res: Response) => {
 
 export const medicineController = {
   createMedicine,
-  getAllStudent,
+  getAllMedicine,
   getStudent,
   deleteStudent,
 };

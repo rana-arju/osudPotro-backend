@@ -11,7 +11,7 @@ router.post(
   validationRequest(medicineValidationSchema),
   medicineController.createMedicine,
 );
-router.get('/get-students', medicineController.getAllStudent);
+router.get('/', medicineController.getAllMedicine);
 router.get('/:id', medicineController.getStudent);
 router.delete('/:id', medicineController.deleteStudent);
 
