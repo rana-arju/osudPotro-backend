@@ -1,14 +1,17 @@
 import { Schema, model } from 'mongoose';
 import { IMedicine } from './medicine.interface';
 
-
-
 const medicineSchema = new Schema<IMedicine>(
   {
     name: {
       type: String,
       trim: true,
       required: [true, 'Medicine name is required.'],
+    },
+    price: {
+      type: Number,
+      required: [true, "Price is required"]
+
     },
 
     images: [String],
@@ -31,7 +34,8 @@ const medicineSchema = new Schema<IMedicine>(
       required: [true, 'Description is required.'],
     },
     category: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
       required: [true, 'Category is required.'],
     },
     Dosage: {
@@ -44,7 +48,8 @@ const medicineSchema = new Schema<IMedicine>(
       required: [true, 'Expire date is required'],
     },
     manufacturer: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'Manufacturer',
       required: [true, 'Manufacturer details required'],
     },
   },
@@ -62,7 +67,4 @@ const medicineSchema = new Schema<IMedicine>(
 // creating a custom method
 
 // Create the model
-export const Medicine = model<IMedicine>(
-  'Medicine',
-  medicineSchema,
-);
+export const Medicine = model<IMedicine>('Medicine', medicineSchema);

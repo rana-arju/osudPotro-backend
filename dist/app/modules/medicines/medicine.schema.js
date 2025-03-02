@@ -8,6 +8,10 @@ const medicineSchema = new mongoose_1.Schema({
         trim: true,
         required: [true, 'Medicine name is required.'],
     },
+    price: {
+        type: Number,
+        required: [true, "Price is required"]
+    },
     images: [String],
     quantity: { type: Number, required: true },
     type: {
@@ -28,7 +32,8 @@ const medicineSchema = new mongoose_1.Schema({
         required: [true, 'Description is required.'],
     },
     category: {
-        type: String,
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'Category',
         required: [true, 'Category is required.'],
     },
     Dosage: {
@@ -41,7 +46,8 @@ const medicineSchema = new mongoose_1.Schema({
         required: [true, 'Expire date is required'],
     },
     manufacturer: {
-        type: String,
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'Manufacturer',
         required: [true, 'Manufacturer details required'],
     },
 }, { timestamps: true });
