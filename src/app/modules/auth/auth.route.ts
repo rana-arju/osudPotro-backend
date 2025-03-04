@@ -22,6 +22,11 @@ router.get(
   auth(USER_ROLE.admin, USER_ROLE.customer),
   authController.getMe,
 );
+router.get(
+  '/user/:userId/orders',
+  auth(USER_ROLE.admin),
+  authController.getUserOrder,
+);
 router.get('/users', auth(USER_ROLE.admin), authController.getAllUsers);
 router.patch(
   '/profile',
@@ -34,7 +39,7 @@ router.post(
   validationRequest(authValidation.changePasswordSchemaValidation),
   authController.changePassword,
 );
-router.delete('/:id', auth(USER_ROLE.admin), authController.deleteByAdmin);
+router.delete('/user/:id', auth(USER_ROLE.admin), authController.deleteByAdmin);
 router.patch(
   '/role/:id',
   auth(USER_ROLE.admin),

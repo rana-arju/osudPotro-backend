@@ -81,6 +81,17 @@ const deleteByAdmin = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getUserOrder = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const result = await authServices.getUserOrders(userId);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User orders get succesfully',
+    data: result,
+  });
+});
 const roleUpdateByAdmin = catchAsync(async (req, res) => {
   const { id } = req.params;
   const role = req.body;
@@ -148,4 +159,5 @@ export const authController = {
   registrationUser,
   roleUpdateByAdmin,
   statusUpdateByAdmin,
+  getUserOrder,
 };

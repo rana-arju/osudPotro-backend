@@ -18,6 +18,7 @@ const AppError_1 = __importDefault(require("../../error/AppError"));
 const auth_model_1 = require("./auth.model");
 const auth_utils_1 = require("./auth.utils");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const orders_model_1 = require("../orders/orders.model");
 const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // user exists or not found
     //const user = await User.findOne({ id: payload?.id }).select('+password');
@@ -97,10 +98,10 @@ const userRoleUpdate = (id, role) => __awaiter(void 0, void 0, void 0, function*
     if (!user) {
         throw new AppError_1.default(404, 'User not found!');
     }
-    if (user.role === role) {
+    if (user.role === (role === null || role === void 0 ? void 0 : role.role)) {
         throw new AppError_1.default(400, `This user already ${user.role}`);
     }
-    const result = yield auth_model_1.User.findByIdAndUpdate(user._id, { role }, { new: true });
+    const result = yield auth_model_1.User.findByIdAndUpdate(user._id, role, { new: true });
     return result;
 });
 const userStatusUpdate = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
@@ -108,10 +109,10 @@ const userStatusUpdate = (id, status) => __awaiter(void 0, void 0, void 0, funct
     if (!user) {
         throw new AppError_1.default(404, 'User not found!');
     }
-    if (user.status === status) {
+    if (user.status === (status === null || status === void 0 ? void 0 : status.status)) {
         throw new AppError_1.default(400, `This user already ${user.status}`);
     }
-    const result = yield auth_model_1.User.findByIdAndUpdate(user._id, { status }, { new: true });
+    const result = yield auth_model_1.User.findByIdAndUpdate(user._id, status, { new: true });
     return result;
 });
 const profileUpdate = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -156,6 +157,14 @@ const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_model_1.User.find().select('-__v');
     return result;
 });
+const getUserOrders = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const userExist = yield auth_model_1.User.findById(userId);
+    if (!userExist) {
+        throw new AppError_1.default(404, 'This user not found');
+    }
+    const result = yield orders_model_1.Order.find({ userId }).populate('items.productId');
+    return result;
+});
 exports.authServices = {
     loginUsertIntoDB,
     createUser,
@@ -165,5 +174,6 @@ exports.authServices = {
     userRoleUpdate,
     userStatusUpdate,
     profileUpdate,
+    getUserOrders,
     passwordChnageIntoDB,
 };

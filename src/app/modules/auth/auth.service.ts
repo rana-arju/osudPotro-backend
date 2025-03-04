@@ -5,6 +5,7 @@ import { IUser } from './auth.interface';
 import { User } from './auth.model';
 import { createToken } from './auth.utils';
 import bcrypt from 'bcrypt';
+import { Order } from '../orders/orders.model';
 
 const createUser = async (payload: IUser) => {
   // user exists or not found
@@ -111,8 +112,7 @@ const deleteUserFromDB = async (id: string) => {
   const result = await User.findByIdAndDelete(user._id);
   return result;
 };
-const userRoleUpdate = async (id: string, role: {role: string}) => {
-
+const userRoleUpdate = async (id: string, role: { role: string }) => {
   const user = await User.findById(id);
   if (!user) {
     throw new AppError(404, 'User not found!');
@@ -124,7 +124,7 @@ const userRoleUpdate = async (id: string, role: {role: string}) => {
 
   return result;
 };
-const userStatusUpdate = async (id: string, status: {status: string}) => {
+const userStatusUpdate = async (id: string, status: { status: string }) => {
   const user = await User.findById(id);
   if (!user) {
     throw new AppError(404, 'User not found!');
@@ -132,11 +132,7 @@ const userStatusUpdate = async (id: string, status: {status: string}) => {
   if (user.status === status?.status) {
     throw new AppError(400, `This user already ${user.status}`);
   }
-  const result = await User.findByIdAndUpdate(
-    user._id,
-    status ,
-    { new: true },
-  );
+  const result = await User.findByIdAndUpdate(user._id, status, { new: true });
   return result;
 };
 const profileUpdate = async (id: string, payload: IUser) => {
@@ -206,6 +202,14 @@ const getAllUsers = async () => {
   const result = await User.find().select('-__v');
   return result;
 };
+const getUserOrders = async (userId: string) => {
+  const userExist = await User.findById(userId);
+  if (!userExist) {
+    throw new AppError(404, 'This user not found');
+  }
+  const result = await Order.find({ userId }).populate('items.productId');
+  return result;
+};
 export const authServices = {
   loginUsertIntoDB,
   createUser,
@@ -215,5 +219,6 @@ export const authServices = {
   userRoleUpdate,
   userStatusUpdate,
   profileUpdate,
+  getUserOrders,
   passwordChnageIntoDB,
 };

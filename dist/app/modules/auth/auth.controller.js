@@ -95,9 +95,20 @@ const deleteByAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
+const getUserOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    const result = yield auth_service_1.authServices.getUserOrders(userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: 'User orders get succesfully',
+        data: result,
+    });
+}));
 const roleUpdateByAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { role } = req.body;
+    const role = req.body;
+    console.log(id);
     const result = yield auth_service_1.authServices.userRoleUpdate(id, role);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
@@ -108,7 +119,7 @@ const roleUpdateByAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void
 }));
 const statusUpdateByAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { status } = req.body;
+    const status = req.body;
     const result = yield auth_service_1.authServices.userStatusUpdate(id, status);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
@@ -150,4 +161,5 @@ exports.authController = {
     registrationUser,
     roleUpdateByAdmin,
     statusUpdateByAdmin,
+    getUserOrder,
 };
