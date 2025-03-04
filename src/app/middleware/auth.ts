@@ -16,6 +16,7 @@ import { IUserRole } from '../modules/auth/auth.interface';
 const auth = (...requiredRoles: IUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
+    
 
     if (!token) {
       throw new AppError(401, 'You are unauthorized to access');

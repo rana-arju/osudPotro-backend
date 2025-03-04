@@ -111,32 +111,30 @@ const deleteUserFromDB = async (id: string) => {
   const result = await User.findByIdAndDelete(user._id);
   return result;
 };
-const userRoleUpdate = async (id: string, role: string) => {
+const userRoleUpdate = async (id: string, role: {role: string}) => {
+
   const user = await User.findById(id);
   if (!user) {
     throw new AppError(404, 'User not found!');
   }
-  if (user.role === role) {
+  if (user.role === role?.role) {
     throw new AppError(400, `This user already ${user.role}`);
   }
-  const result = await User.findByIdAndUpdate(
-    user._id,
-    { role },
-    { new: true },
-  );
+  const result = await User.findByIdAndUpdate(user._id, role, { new: true });
+
   return result;
 };
-const userStatusUpdate = async (id: string, status: string) => {
+const userStatusUpdate = async (id: string, status: {status: string}) => {
   const user = await User.findById(id);
   if (!user) {
     throw new AppError(404, 'User not found!');
   }
-  if (user.status === status) {
+  if (user.status === status?.status) {
     throw new AppError(400, `This user already ${user.status}`);
   }
   const result = await User.findByIdAndUpdate(
     user._id,
-    { status },
+    status ,
     { new: true },
   );
   return result;

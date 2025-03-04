@@ -83,7 +83,9 @@ const deleteByAdmin = catchAsync(async (req, res) => {
 });
 const roleUpdateByAdmin = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { role } = req.body;
+  const role = req.body;
+  console.log(id);
+
   const result = await authServices.userRoleUpdate(id, role);
 
   sendResponse(res, {
@@ -95,7 +97,7 @@ const roleUpdateByAdmin = catchAsync(async (req, res) => {
 });
 const statusUpdateByAdmin = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const status = req.body;
 
   const result = await authServices.userStatusUpdate(id, status);
 
