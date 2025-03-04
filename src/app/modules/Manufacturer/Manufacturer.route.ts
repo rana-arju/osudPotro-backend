@@ -17,13 +17,18 @@ router.post(
 router.get('/', ManufacturerController.getAllManufacturer);
 router.get(
   '/:id',
-  auth(USER_ROLE.admin, USER_ROLE.customer),
+
   ManufacturerController.getSingleManufacturer,
 );
 router.delete(
   '/:id',
   auth(USER_ROLE.admin),
   ManufacturerController.deleteManufacturer,
+);
+router.patch(
+  '/:id',
+  auth(USER_ROLE.admin),
+  ManufacturerController.updateManufacturer,
 );
 
 export const ManufacturerRoutes = router;

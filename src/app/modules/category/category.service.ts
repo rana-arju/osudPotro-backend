@@ -23,6 +23,19 @@ const deleteSingleCategory = async (id: string) => {
   const result = await Category.findByIdAndDelete(id);
   return result;
 };
+const updateSingleCategory = async (
+  id: string,
+  payload: Partial<ICategory>,
+) => {
+  const categoryExist = await Category.findById(id);
+  if (!categoryExist) {
+    throw new AppError(404, 'This category not found!');
+  }
+  const result = await Category.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+  return result;
+};
 const getSingleCategory = async (id: string) => {
   const categoryExist = await Category.findById(id);
   if (!categoryExist) {
@@ -37,4 +50,5 @@ export const categoryServices = {
   getAllCategoryFromDB,
   getSingleCategory,
   deleteSingleCategory,
+  updateSingleCategory,
 };

@@ -14,6 +14,7 @@ const router = express_1.default.Router();
 // will call controller function
 router.post('/', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), (0, validationRequest_1.default)(Manufacturer_validation_1.manufacturerValidationSchema), Manufacturer_controller_1.ManufacturerController.createManufacturer);
 router.get('/', Manufacturer_controller_1.ManufacturerController.getAllManufacturer);
-router.get('/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin, auth_interface_1.USER_ROLE.customer), Manufacturer_controller_1.ManufacturerController.getSingleManufacturer);
+router.get('/:id', Manufacturer_controller_1.ManufacturerController.getSingleManufacturer);
 router.delete('/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), Manufacturer_controller_1.ManufacturerController.deleteManufacturer);
+router.patch('/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), Manufacturer_controller_1.ManufacturerController.updateManufacturer);
 exports.ManufacturerRoutes = router;

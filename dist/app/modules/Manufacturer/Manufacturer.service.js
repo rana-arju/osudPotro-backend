@@ -33,6 +33,14 @@ const deleteSingleManufacturer = (id) => __awaiter(void 0, void 0, void 0, funct
     const result = yield Manufacturer_schema_1.Manufacturer.findByIdAndDelete(id);
     return result;
 });
+const updateSingleManufacturer = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const manufacturer = yield Manufacturer_schema_1.Manufacturer.findById(id);
+    if (!manufacturer) {
+        throw new AppError_1.default(404, 'This Manufacturer not found!');
+    }
+    const result = yield Manufacturer_schema_1.Manufacturer.findByIdAndUpdate(id, payload);
+    return result;
+});
 const getSingleManufacturer = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const manufacturer = yield Manufacturer_schema_1.Manufacturer.findById(id);
     if (!manufacturer) {
@@ -46,4 +54,5 @@ exports.manufacturerServices = {
     getAllManufacturerFromDB,
     getSingleManufacturer,
     deleteSingleManufacturer,
+    updateSingleManufacturer,
 };

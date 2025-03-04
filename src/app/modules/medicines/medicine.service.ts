@@ -24,7 +24,9 @@ const getAllMedicineFromDB = async (searchTerm: Record<string, unknown>) => {
   return { result, meta };
 };
 const getSingleMedicine = async (id: string) => {
-  const result = await Medicine.findById(id);
+  const result = await Medicine.findById(id)
+    .populate('category')
+    .populate('manufacturer');
   if (!result) {
     throw new AppError(404, 'This medicine not found!');
   }
@@ -50,7 +52,9 @@ const updateSingleMedicine = async (
   const result = await Medicine.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
-  }).select('-__v');
+  })
+    .populate('category')
+    .populate('manufacturer');
   if (!result) {
     throw new AppError(400, `Medicine with ID ${id} not updated. try again`);
   }

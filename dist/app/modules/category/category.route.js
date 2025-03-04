@@ -14,6 +14,7 @@ const router = express_1.default.Router();
 // will call controller function
 router.post('/', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), (0, validationRequest_1.default)(category_validation_1.categoryValidationSchema), category_controller_1.CategoryController.createCategory);
 router.get('/', category_controller_1.CategoryController.getAllCategory);
-router.get('/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin, auth_interface_1.USER_ROLE.customer), category_controller_1.CategoryController.getSingleCategory);
+router.get('/:id', category_controller_1.CategoryController.getSingleCategory);
 router.delete('/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), category_controller_1.CategoryController.deleteCategory);
+router.patch('/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), category_controller_1.CategoryController.updateCategory);
 exports.CategoryRoutes = router;

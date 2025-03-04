@@ -12,7 +12,7 @@ const createMedicine = async (
     const payload = req.body;
     const result = await MedicineServices.createMedicineIntoDB(payload);
     res.json({
-      status: true,
+      success: true,
       message: 'New medicine added successful',
       data: result,
     });
@@ -44,7 +44,7 @@ const getSingleMedicine = async (
     const result = await MedicineServices.getSingleMedicine(id);
 
     res.json({
-      status: true,
+      success: true,
       message: 'Medicine retrieved successfully',
       data: result,
     });
@@ -80,7 +80,7 @@ const updatMedicine = async (
     );
 
     res.json({
-      status: true,
+      success: true,
       message: 'Medicine updated successfully',
       data: result,
     });

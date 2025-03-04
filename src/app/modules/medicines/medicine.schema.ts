@@ -38,9 +38,7 @@ const medicineSchema = new Schema<IMedicine>(
       ref: 'Category',
       required: [true, 'Category is required.'],
     },
-    Dosage: {
-      type: String,
-    },
+
     stockavailable: { type: Boolean, default: true },
     prescription: { type: String, enum: ['Yes', 'No'], default: 'No' },
     expiryDate: {

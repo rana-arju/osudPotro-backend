@@ -12,18 +12,15 @@ router.post(
   '/',
   auth(USER_ROLE.admin),
   validationRequest(categoryValidationSchema),
-  CategoryController.createCategory
+  CategoryController.createCategory,
 );
 router.get('/', CategoryController.getAllCategory);
 router.get(
   '/:id',
-  auth(USER_ROLE.admin, USER_ROLE.customer),
-  CategoryController.getSingleCategory
+
+  CategoryController.getSingleCategory,
 );
-router.delete(
-  '/:id',
-  auth(USER_ROLE.admin),
-  CategoryController.deleteCategory
-);
+router.delete('/:id', auth(USER_ROLE.admin), CategoryController.deleteCategory);
+router.patch('/:id', auth(USER_ROLE.admin), CategoryController.updateCategory);
 
 export const CategoryRoutes = router;

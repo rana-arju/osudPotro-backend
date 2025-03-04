@@ -21,7 +21,7 @@ const createCategory = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const payload = req.body;
         const result = yield category_service_1.categoryServices.createNewCategory(payload);
         res.json({
-            status: true,
+            success: true,
             message: 'Your category added successful',
             data: result,
         });
@@ -49,6 +49,16 @@ const deleteCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         data: result,
     });
 }));
+const updateCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield category_service_1.categoryServices.updateSingleCategory(id, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        message: 'Category updated successfully',
+        success: true,
+        data: result,
+    });
+}));
 const getSingleCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const result = yield category_service_1.categoryServices.getSingleCategory(id);
@@ -64,4 +74,5 @@ exports.CategoryController = {
     getAllCategory,
     deleteCategory,
     getSingleCategory,
+    updateCategory,
 };

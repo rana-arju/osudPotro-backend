@@ -35,7 +35,9 @@ const getAllMedicineFromDB = (searchTerm) => __awaiter(void 0, void 0, void 0, f
     return { result, meta };
 });
 const getSingleMedicine = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield medicine_schema_1.Medicine.findById(id);
+    const result = yield medicine_schema_1.Medicine.findById(id)
+        .populate('category')
+        .populate('manufacturer');
     if (!result) {
         throw new AppError_1.default(404, 'This medicine not found!');
     }
@@ -57,7 +59,9 @@ const updateSingleMedicine = (id, payload) => __awaiter(void 0, void 0, void 0, 
     const result = yield medicine_schema_1.Medicine.findByIdAndUpdate(id, payload, {
         new: true,
         runValidators: true,
-    }).select('-__v');
+    })
+        .populate('category')
+        .populate('manufacturer');
     if (!result) {
         throw new AppError_1.default(400, `Medicine with ID ${id} not updated. try again`);
     }

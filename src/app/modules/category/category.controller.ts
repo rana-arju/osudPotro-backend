@@ -12,7 +12,7 @@ const createCategory = async (
     const payload = req.body;
     const result = await categoryServices.createNewCategory(payload);
     res.json({
-      status: true,
+      success: true,
       message: 'Your category added successful',
       data: result,
     });
@@ -41,6 +41,17 @@ const deleteCategory = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const updateCategory = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await categoryServices.updateSingleCategory(id, req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    message: 'Category updated successfully',
+    success: true,
+    data: result,
+  });
+});
 const getSingleCategory = catchAsync(async (req, res) => {
   const { id } = req.params;
 
@@ -58,4 +69,5 @@ export const CategoryController = {
   getAllCategory,
   deleteCategory,
   getSingleCategory,
+  updateCategory,
 };

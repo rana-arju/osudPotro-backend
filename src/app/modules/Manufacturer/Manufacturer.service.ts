@@ -23,6 +23,14 @@ const deleteSingleManufacturer = async (id: string) => {
   const result = await Manufacturer.findByIdAndDelete(id);
   return result;
 };
+const updateSingleManufacturer = async (id: string, payload: Partial<IManufacturer>) => {
+  const manufacturer = await Manufacturer.findById(id);
+  if (!manufacturer) {
+    throw new AppError(404, 'This Manufacturer not found!');
+  }
+  const result = await Manufacturer.findByIdAndUpdate(id, payload);
+  return result;
+};
 const getSingleManufacturer = async (id: string) => {
   const manufacturer = await Manufacturer.findById(id);
   if (!manufacturer) {
@@ -37,4 +45,5 @@ export const manufacturerServices = {
   getAllManufacturerFromDB,
   getSingleManufacturer,
   deleteSingleManufacturer,
+  updateSingleManufacturer,
 };

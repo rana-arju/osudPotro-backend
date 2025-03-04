@@ -21,7 +21,7 @@ const createManufacturer = (req, res, next) => __awaiter(void 0, void 0, void 0,
         const payload = req.body;
         const result = yield Manufacturer_service_1.manufacturerServices.createNewManufacturer(payload);
         res.json({
-            status: true,
+            success: true,
             message: 'Your Manufacturer added successful',
             data: result,
         });
@@ -41,10 +41,21 @@ const getAllManufacturer = (0, catchAsync_1.default)((req, res) => __awaiter(voi
 }));
 const deleteManufacturer = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    console.log(id);
     const result = yield Manufacturer_service_1.manufacturerServices.deleteSingleManufacturer(id);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         message: 'Manufacturer deleted successfully',
+        success: true,
+        data: result,
+    });
+}));
+const updateManufacturer = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield Manufacturer_service_1.manufacturerServices.updateSingleManufacturer(id, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        message: 'Manufacturer updated successfully',
         success: true,
         data: result,
     });
@@ -64,4 +75,5 @@ exports.ManufacturerController = {
     getAllManufacturer,
     deleteManufacturer,
     getSingleManufacturer,
+    updateManufacturer,
 };

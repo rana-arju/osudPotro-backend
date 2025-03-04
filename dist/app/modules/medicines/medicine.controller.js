@@ -21,7 +21,7 @@ const createMedicine = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const payload = req.body;
         const result = yield medicine_service_1.MedicineServices.createMedicineIntoDB(payload);
         res.json({
-            status: true,
+            success: true,
             message: 'New medicine added successful',
             data: result,
         });
@@ -46,7 +46,7 @@ const getSingleMedicine = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const { id } = req.params;
         const result = yield medicine_service_1.MedicineServices.getSingleMedicine(id);
         res.json({
-            status: true,
+            success: true,
             message: 'Medicine retrieved successfully',
             data: result,
         });
@@ -72,7 +72,7 @@ const updatMedicine = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const payload = req.body;
         const result = yield medicine_service_1.MedicineServices.updateSingleMedicine(id, payload);
         res.json({
-            status: true,
+            success: true,
             message: 'Medicine updated successfully',
             data: result,
         });

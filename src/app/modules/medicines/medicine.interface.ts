@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export interface IMedicine {
   name: string;
@@ -11,7 +11,6 @@ export interface IMedicine {
   precautions?: string;
   description: string;
   category: Types.ObjectId;
-  Dosage?: string;
   stockavailable: boolean;
   prescription: 'Yes' | 'No';
   expiryDate: Date;

@@ -33,6 +33,16 @@ const deleteSingleCategory = (id) => __awaiter(void 0, void 0, void 0, function*
     const result = yield category_schema_1.Category.findByIdAndDelete(id);
     return result;
 });
+const updateSingleCategory = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const categoryExist = yield category_schema_1.Category.findById(id);
+    if (!categoryExist) {
+        throw new AppError_1.default(404, 'This category not found!');
+    }
+    const result = yield category_schema_1.Category.findByIdAndUpdate(id, payload, {
+        new: true,
+    });
+    return result;
+});
 const getSingleCategory = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const categoryExist = yield category_schema_1.Category.findById(id);
     if (!categoryExist) {
@@ -46,4 +56,5 @@ exports.categoryServices = {
     getAllCategoryFromDB,
     getSingleCategory,
     deleteSingleCategory,
+    updateSingleCategory,
 };

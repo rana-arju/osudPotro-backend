@@ -10,6 +10,8 @@ const auth_route_1 = require("./app/modules/auth/auth.route");
 const review_route_1 = require("./app/modules/review/review.route");
 const Manufacturer_route_1 = require("./app/modules/Manufacturer/Manufacturer.route");
 const category_route_1 = require("./app/modules/category/category.route");
+const notFound_1 = require("./app/middleware/notFound");
+const globalErrorHandler_1 = require("./app/middleware/globalErrorHandler");
 const app = (0, express_1.default)();
 //json parser
 app.use(express_1.default.json());
@@ -24,4 +26,7 @@ app.use('/api/v1/category', category_route_1.CategoryRoutes);
 app.get('/', (req, res) => {
     res.send('Server is Working...');
 });
+app.use(globalErrorHandler_1.globalErrorHandler);
+//Not Found
+app.use(notFound_1.notFound);
 exports.default = app;
