@@ -3,45 +3,45 @@ import { orderController } from './orders.controller';
 import auth from '../../middleware/auth';
 import { USER_ROLE } from '../auth/auth.interface';
 
-const orderRouter = Router();
-
-orderRouter.get('/revenue', orderController.totalRevenue);
-orderRouter.get(
+const router = Router();
+router.get('/revenue', orderController.totalRevenue);
+router.get(
   '/myOrder',
   auth(USER_ROLE.customer, USER_ROLE.admin),
   orderController.getMyOrder,
 );
 
-orderRouter.get(
+router.get(
   '/verify',
   auth(USER_ROLE.customer, USER_ROLE.admin),
   orderController.verifyPayment,
 );
-orderRouter.patch(
+router.patch(
   '/status/:productId',
   auth(USER_ROLE.admin),
   orderController.orderStatusUpdate,
 );
-orderRouter.get(
+router.get(
   '/:productId',
   auth(USER_ROLE.admin, USER_ROLE.customer),
   orderController.getSingleOrder,
 );
-orderRouter.put(
+router.put(
   '/:productId',
   auth(USER_ROLE.admin, USER_ROLE.customer),
   orderController.updateOrder,
 );
-orderRouter.delete(
+router.delete(
   '/:productId',
   auth(USER_ROLE.admin, USER_ROLE.customer),
   orderController.deleteOrder,
 );
-orderRouter.post(
+router.post(
   '/',
   auth(USER_ROLE.customer, USER_ROLE.admin),
   orderController.placeOrder,
 );
-orderRouter.get('/', auth(USER_ROLE.admin), orderController.getAllOrder);
+router.get('/', auth(USER_ROLE.admin), orderController.getAllOrder);
 
-export default orderRouter;
+export const OrderRoutes = router;
+

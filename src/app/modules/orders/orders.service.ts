@@ -1,6 +1,5 @@
 import { JwtPayload } from 'jsonwebtoken';
 import AppError from '../../error/AppError';
-import { IUser } from '../auth/auth.interface';
 import { orderUtils } from './order.utils';
 import { IOrder } from './orders.interface';
 import { Order } from './orders.model';
@@ -12,12 +11,11 @@ import { Medicine } from '../medicines/medicine.schema';
 //Place order
 
 const addOrderService = async (
-  userId: JwtPayload,
+  userId: string,
   payload: {
     medicines: { medicine: string; quantity: number }[];
-    totalPrice: number;
-    totalQuantity: number;
-    userInfo: IUser;
+    shippingInfo: { address: string; city: string; phone: string };
+    shippingFee: number;
   },
   client_ip: string,
 ): Promise<string> => {
@@ -27,7 +25,7 @@ const addOrderService = async (
   if (!user) {
     throw new AppError(404, 'User not found');
   }
-  const { address, city, phone } = payload.userInfo;
+  const { address, city, phone } = payload.shippingInfo;
 
   //user update
   const updatedUser = await User.findByIdAndUpdate(
@@ -57,11 +55,12 @@ const addOrderService = async (
           quantity: updateQuantity,
         });
         const subtotal = medicine ? (medicine.price || 0) * item.quantity : 0;
-        totalPrice += subtotal;
+        totalPrice = totalPrice + subtotal + payload.shippingFee;
         return item;
       }
     }),
   );
+console.log('after medicineDetails', payload.shippingFee,totalPrice );
 
   //create order
   let order = await Order.create({
@@ -69,6 +68,7 @@ const addOrderService = async (
     medicines: medicineDetails,
     totalPrice,
   });
+console.log('after create order');
 
   // payment integration
   const shurjopayPayload = {

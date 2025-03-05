@@ -117,7 +117,8 @@ const totalRevenue = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 const verifyPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const order = yield orders_service_1.orderService.verifyPayment(req.query.order_id);
+    console.log(req.query);
+    const order = yield orders_service_1.orderService.verifyPayment(req.query.orderId);
     (0, sendResponse_1.default)(res, {
         message: 'Order verified successfully',
         data: order,

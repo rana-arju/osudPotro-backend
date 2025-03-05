@@ -132,7 +132,9 @@ const totalRevenue = async (
   }
 };
 const verifyPayment = catchAsync(async (req, res) => {
-  const order = await orderService.verifyPayment(req.query.order_id as string);
+  console.log(req.query);
+  
+  const order = await orderService.verifyPayment(req.query.orderId as string);
 
   sendResponse(res, {
     message: 'Order verified successfully',

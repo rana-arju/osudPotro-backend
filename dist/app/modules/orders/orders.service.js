@@ -29,7 +29,7 @@ const addOrderService = (userId, payload, client_ip) => __awaiter(void 0, void 0
     if (!user) {
         throw new AppError_1.default(404, 'User not found');
     }
-    const { address, city, phone } = payload.userInfo;
+    const { address, city, phone } = payload.shippingInfo;
     //user update
     const updatedUser = yield auth_model_1.User.findByIdAndUpdate(user._id, {
         address,
@@ -49,16 +49,18 @@ const addOrderService = (userId, payload, client_ip) => __awaiter(void 0, void 0
                 quantity: updateQuantity,
             });
             const subtotal = medicine ? (medicine.price || 0) * item.quantity : 0;
-            totalPrice += subtotal;
+            totalPrice = totalPrice + subtotal + payload.shippingFee;
             return item;
         }
     })));
+    console.log('after medicineDetails', payload.shippingFee, totalPrice);
     //create order
     let order = yield orders_model_1.Order.create({
         user: user._id,
         medicines: medicineDetails,
         totalPrice,
     });
+    console.log('after create order');
     // payment integration
     const shurjopayPayload = {
         amount: totalPrice.toFixed(2),
