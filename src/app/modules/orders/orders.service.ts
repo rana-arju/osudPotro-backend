@@ -14,8 +14,14 @@ const addOrderService = async (
   userId: string,
   payload: {
     medicines: { medicine: string; quantity: number }[];
-    shippingInfo: { address: string; city: string; phone: string };
+    shippingInfo: {
+      address: string;
+      city: string;
+      phone: string;
+      customer: string;
+    };
     shippingFee: number;
+    prescriptionImage: string;
   },
   client_ip: string,
 ): Promise<string> => {
@@ -25,7 +31,7 @@ const addOrderService = async (
   if (!user) {
     throw new AppError(404, 'User not found');
   }
-  const { address, city, phone } = payload.shippingInfo;
+  const { address, city, phone, customer } = payload.shippingInfo;
 
   //user update
   const updatedUser = await User.findByIdAndUpdate(
@@ -60,26 +66,26 @@ const addOrderService = async (
       }
     }),
   );
-console.log('after medicineDetails', payload.shippingFee,totalPrice );
 
   //create order
   let order = await Order.create({
     user: user._id,
     medicines: medicineDetails,
     totalPrice,
+    prescriptionImage: payload?.prescriptionImage,
+    customer: payload?.shippingInfo?.customer,
   });
-console.log('after create order');
 
   // payment integration
   const shurjopayPayload = {
     amount: totalPrice.toFixed(2),
     order_id: order._id,
     currency: 'BDT',
-    customer_name: updatedUser?.name,
-    customer_address: updatedUser?.address || address,
+    customer_name: customer || updatedUser?.name,
+    customer_address: address || updatedUser?.address,
     customer_email: updatedUser?.email,
-    customer_phone: updatedUser?.phone || phone,
-    customer_city: updatedUser?.city || city,
+    customer_phone: phone || updatedUser?.phone,
+    customer_city: city || updatedUser?.city,
     client_ip,
   };
   const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
@@ -115,7 +121,8 @@ const calculateRevenueService = async () => {
 };
 
 //Get All Product
-const getAllOrderService = async (searchTerm: Record<string, unknown>) => {
+const getAllOrderService = async () => {
+  /*
   const allOrderQuery = new QueryBuilder(
     Order.find().populate('user').populate('products.product'),
     searchTerm,
@@ -129,6 +136,13 @@ const getAllOrderService = async (searchTerm: Record<string, unknown>) => {
   const meta = await allOrderQuery.countTotal();
 
   return { result, meta };
+  */
+
+  const result = await Order.find()
+    .sort({ createdAt: -1 })
+    .populate('user')
+    .populate('medicines.medicine');
+  return result;
 };
 
 //Get All Product
@@ -147,7 +161,9 @@ const getMyOrderService = async (userId: JwtPayload) => {
 
 //Get single Product
 const getSingleOrderService = async (id: string) => {
-  const result = await Order.findById(id).select('-__v');
+  const result = await Order.findOne({ 'transaction.id': id })
+    .populate('user')
+    .populate('medicines.medicine');
   if (!result) {
     throw new AppError(404, `Order with ID ${id} not found.`);
   }

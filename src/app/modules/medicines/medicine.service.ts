@@ -12,17 +12,25 @@ const createMedicineIntoDB = async (medicineData: IMedicine) => {
 
 //Get All medicine
 const getAllMedicineFromDB = async (searchTerm: Record<string, unknown>) => {
+
+
   const allMedicineQuery = new QueryBuilder(Medicine.find(), searchTerm)
     .search(medicineSearchableField)
     .filter()
     .sort()
     .paginate()
     .fields();
+
+  // Add populate directly here (you could also add it inside QueryBuilder if needed)
+  allMedicineQuery.modelQuery = allMedicineQuery.modelQuery.populate('category')
+    .populate('manufacturer');
+
   const result = await allMedicineQuery.modelQuery;
   const meta = await allMedicineQuery.countTotal();
 
   return { result, meta };
 };
+
 const getSingleMedicine = async (id: string) => {
   const result = await Medicine.findById(id)
     .populate('category')

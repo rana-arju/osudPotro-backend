@@ -108,7 +108,6 @@ const getUserOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
 const roleUpdateByAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const role = req.body;
-    console.log(id);
     const result = yield auth_service_1.authServices.userRoleUpdate(id, role);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,

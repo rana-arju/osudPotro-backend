@@ -32,7 +32,7 @@ const getAllManufacturer = catchAsync(async (req, res) => {
 
 const deleteManufacturer = catchAsync(async (req, res) => {
   const { id } = req.params;
-console.log(id);
+
 
   const result = await manufacturerServices.deleteSingleManufacturer(id);
   sendResponse(res, {

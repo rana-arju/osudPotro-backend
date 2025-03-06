@@ -95,7 +95,7 @@ const getUserOrder = catchAsync(async (req, res) => {
 const roleUpdateByAdmin = catchAsync(async (req, res) => {
   const { id } = req.params;
   const role = req.body;
-  console.log(id);
+
 
   const result = await authServices.userRoleUpdate(id, role);
 

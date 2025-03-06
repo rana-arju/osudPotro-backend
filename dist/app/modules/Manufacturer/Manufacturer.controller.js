@@ -41,7 +41,6 @@ const getAllManufacturer = (0, catchAsync_1.default)((req, res) => __awaiter(voi
 }));
 const deleteManufacturer = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    console.log(id);
     const result = yield Manufacturer_service_1.manufacturerServices.deleteSingleManufacturer(id);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,

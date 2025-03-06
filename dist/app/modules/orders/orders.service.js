@@ -17,19 +17,17 @@ const AppError_1 = __importDefault(require("../../error/AppError"));
 const order_utils_1 = require("./order.utils");
 const orders_model_1 = require("./orders.model");
 const auth_model_1 = require("../auth/auth.model");
-const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
-const order_constant_1 = require("./order.constant");
 const medicine_schema_1 = require("../medicines/medicine.schema");
 //Place order
 const addOrderService = (userId, payload, client_ip) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     if (!((_a = payload === null || payload === void 0 ? void 0 : payload.medicines) === null || _a === void 0 ? void 0 : _a.length))
         throw new AppError_1.default(406, 'Order is not specified');
     const user = yield auth_model_1.User.findById(userId);
     if (!user) {
         throw new AppError_1.default(404, 'User not found');
     }
-    const { address, city, phone } = payload.shippingInfo;
+    const { address, city, phone, customer } = payload.shippingInfo;
     //user update
     const updatedUser = yield auth_model_1.User.findByIdAndUpdate(user._id, {
         address,
@@ -53,24 +51,24 @@ const addOrderService = (userId, payload, client_ip) => __awaiter(void 0, void 0
             return item;
         }
     })));
-    console.log('after medicineDetails', payload.shippingFee, totalPrice);
     //create order
     let order = yield orders_model_1.Order.create({
         user: user._id,
         medicines: medicineDetails,
         totalPrice,
+        prescriptionImage: payload === null || payload === void 0 ? void 0 : payload.prescriptionImage,
+        customer: (_b = payload === null || payload === void 0 ? void 0 : payload.shippingInfo) === null || _b === void 0 ? void 0 : _b.customer,
     });
-    console.log('after create order');
     // payment integration
     const shurjopayPayload = {
         amount: totalPrice.toFixed(2),
         order_id: order._id,
         currency: 'BDT',
-        customer_name: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.name,
-        customer_address: (updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.address) || address,
+        customer_name: customer || (updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.name),
+        customer_address: address || (updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.address),
         customer_email: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.email,
-        customer_phone: (updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.phone) || phone,
-        customer_city: (updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.city) || city,
+        customer_phone: phone || (updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.phone),
+        customer_city: city || (updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.city),
         client_ip,
     };
     const payment = yield order_utils_1.orderUtils.makePaymentAsync(shurjopayPayload);
@@ -102,16 +100,27 @@ const calculateRevenueService = () => __awaiter(void 0, void 0, void 0, function
     return result;
 });
 //Get All Product
-const getAllOrderService = (searchTerm) => __awaiter(void 0, void 0, void 0, function* () {
-    const allOrderQuery = new QueryBuilder_1.default(orders_model_1.Order.find().populate('user').populate('products.product'), searchTerm)
-        .search(order_constant_1.OrderSearchableField)
-        .filter()
-        .sort()
-        .paginate()
-        .fields();
-    const result = yield allOrderQuery.modelQuery;
-    const meta = yield allOrderQuery.countTotal();
+const getAllOrderService = () => __awaiter(void 0, void 0, void 0, function* () {
+    /*
+    const allOrderQuery = new QueryBuilder(
+      Order.find().populate('user').populate('products.product'),
+      searchTerm,
+    )
+      .search(OrderSearchableField)
+      .filter()
+      .sort()
+      .paginate()
+      .fields();
+    const result = await allOrderQuery.modelQuery;
+    const meta = await allOrderQuery.countTotal();
+  
     return { result, meta };
+    */
+    const result = yield orders_model_1.Order.find()
+        .sort({ createdAt: -1 })
+        .populate('user')
+        .populate('medicines.medicine');
+    return result;
 });
 //Get All Product
 const getMyOrderService = (userId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -127,7 +136,9 @@ const getMyOrderService = (userId) => __awaiter(void 0, void 0, void 0, function
 });
 //Get single Product
 const getSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield orders_model_1.Order.findById(id).select('-__v');
+    const result = yield orders_model_1.Order.findOne({ 'transaction.id': id })
+        .populate('user')
+        .populate('medicines.medicine');
     if (!result) {
         throw new AppError_1.default(404, `Order with ID ${id} not found.`);
     }

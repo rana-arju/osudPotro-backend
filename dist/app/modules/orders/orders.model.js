@@ -24,11 +24,15 @@ const orderSchema = new mongoose_1.Schema({
     shippingInfo: {
         address: String,
         city: String,
-        phone: String
+        phone: String,
+        customer: String,
     },
     totalPrice: {
         type: Number,
         required: true,
+    },
+    prescriptionImage: {
+        type: String,
     },
     status: {
         type: String,

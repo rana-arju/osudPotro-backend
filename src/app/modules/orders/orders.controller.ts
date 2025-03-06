@@ -20,14 +20,13 @@ const placeOrder = catchAsync(async (req, res) => {
 
 // All Order get controller
 const getAllOrder = catchAsync(async (req, res) => {
-  const result = await orderService.getAllOrderService(req.query);
+  const result = await orderService.getAllOrderService();
 
   sendResponse(res, {
     statusCode: 200,
     message: 'Order get successfully',
     success: true,
-    data: result?.result,
-    meta: result?.meta,
+    data: result,
   });
 });
 // All Order get controller
@@ -51,6 +50,8 @@ const getSingleOrder = async (
 ) => {
   try {
     const { productId } = req.params;
+    
+    
 
     const result = await orderService.getSingleOrderService(productId);
 
@@ -80,6 +81,7 @@ const deleteOrder = catchAsync(async (req, res) => {
 // Single Order status controller
 const orderStatusUpdate = catchAsync(async (req, res) => {
   const { productId } = req.params;
+ 
 
   const result = await orderService.updateStatusService(productId, req.body);
 
@@ -132,8 +134,8 @@ const totalRevenue = async (
   }
 };
 const verifyPayment = catchAsync(async (req, res) => {
-  console.log(req.query);
-  
+ 
+
   const order = await orderService.verifyPayment(req.query.orderId as string);
 
   sendResponse(res, {

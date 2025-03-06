@@ -30,6 +30,9 @@ const getAllMedicineFromDB = (searchTerm) => __awaiter(void 0, void 0, void 0, f
         .sort()
         .paginate()
         .fields();
+    // Add populate directly here (you could also add it inside QueryBuilder if needed)
+    allMedicineQuery.modelQuery = allMedicineQuery.modelQuery.populate('category')
+        .populate('manufacturer');
     const result = yield allMedicineQuery.modelQuery;
     const meta = yield allMedicineQuery.countTotal();
     return { result, meta };

@@ -10,8 +10,10 @@ export interface IOrder extends Document {
     address: string;
     city: string;
     phone: string;
+    customer: string
   };
   totalPrice: number;
+  prescriptionImage?: string;
   status:
     | 'Pending'
     | 'Paid'
