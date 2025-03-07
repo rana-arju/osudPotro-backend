@@ -4,9 +4,8 @@ import { orderUtils } from './order.utils';
 import { IOrder } from './orders.interface';
 import { Order } from './orders.model';
 import { User } from '../auth/auth.model';
-import QueryBuilder from '../../builder/QueryBuilder';
-import { OrderSearchableField } from './order.constant';
 import { Medicine } from '../medicines/medicine.schema';
+import { sendOrderUpdateNotification } from '../../utils/emailService';
 
 //Place order
 
@@ -208,8 +207,29 @@ const updateStatusService = async (id: string, payload: { status: string }) => {
   const result = await Order.findByIdAndUpdate(orderExist._id, payload, {
     new: true,
   }).select('-__v');
+
   if (!result) {
     throw new AppError(404, `Order with ID ${id} not found.`);
+  }
+  const userExist = await User.findById(orderExist?.user);
+  if (!userExist) {
+    throw new AppError(404, 'This customer not found!');
+  }
+
+  // Ensure email exists before attempting to send notification
+  if (!orderExist.user || !userExist.email) {
+    console.warn(
+      `Order ${id} has no associated user email. Skipping email notification.`,
+    );
+    return result; // Return result even if email is missing (optional decision).
+  }
+
+  // Send email notification
+  try {
+    await sendOrderUpdateNotification(userExist.email, id, payload.status);
+  } catch (error) {
+    console.error('Failed to send order update notification:', error);
+    // Consider how you want to handle this error. You might want to log it or notify through another channel.
   }
   return result;
 };

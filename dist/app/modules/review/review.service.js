@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.reviewServices = void 0;
-const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const AppError_1 = __importDefault(require("../../error/AppError"));
 const review_schema_1 = require("./review.schema");
 //create medicine
@@ -23,15 +22,8 @@ const createNewReview = (reviewData) => __awaiter(void 0, void 0, void 0, functi
 });
 //Get All medicine
 const getAllReviewFromDB = (searchTerm) => __awaiter(void 0, void 0, void 0, function* () {
-    const allReviewQuery = new QueryBuilder_1.default(review_schema_1.Review.find(), searchTerm)
-        .search([])
-        .filter()
-        .sort()
-        .paginate()
-        .fields();
-    const result = yield allReviewQuery.modelQuery;
-    const meta = yield allReviewQuery.countTotal();
-    return { result, meta };
+    const result = yield review_schema_1.Review.find().populate("user");
+    return result;
 });
 const deleteSingleReview = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const review = yield review_schema_1.Review.findById(id);

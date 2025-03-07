@@ -18,6 +18,7 @@ const order_utils_1 = require("./order.utils");
 const orders_model_1 = require("./orders.model");
 const auth_model_1 = require("../auth/auth.model");
 const medicine_schema_1 = require("../medicines/medicine.schema");
+const emailService_1 = require("../../utils/emailService");
 //Place order
 const addOrderService = (userId, payload, client_ip) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
@@ -180,6 +181,23 @@ const updateStatusService = (id, payload) => __awaiter(void 0, void 0, void 0, f
     }).select('-__v');
     if (!result) {
         throw new AppError_1.default(404, `Order with ID ${id} not found.`);
+    }
+    const userExist = yield auth_model_1.User.findById(orderExist === null || orderExist === void 0 ? void 0 : orderExist.user);
+    if (!userExist) {
+        throw new AppError_1.default(404, 'This customer not found!');
+    }
+    // Ensure email exists before attempting to send notification
+    if (!orderExist.user || !userExist.email) {
+        console.warn(`Order ${id} has no associated user email. Skipping email notification.`);
+        return result; // Return result even if email is missing (optional decision).
+    }
+    // Send email notification
+    try {
+        yield (0, emailService_1.sendOrderUpdateNotification)(userExist.email, id, payload.status);
+    }
+    catch (error) {
+        console.error('Failed to send order update notification:', error);
+        // Consider how you want to handle this error. You might want to log it or notify through another channel.
     }
     return result;
 });

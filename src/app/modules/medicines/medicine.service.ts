@@ -1,8 +1,11 @@
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../error/AppError';
+import { sendLowStockNotification } from '../../utils/emailService';
 import { medicineSearchableField } from './medicine.constant';
 import { IMedicine } from './medicine.interface';
 import { Medicine } from './medicine.schema';
+const LOW_STOCK_THRESHOLD = 5 // Set this to your desired threshold
+
 
 //create medicine
 const createMedicineIntoDB = async (medicineData: IMedicine) => {
@@ -65,6 +68,15 @@ const updateSingleMedicine = async (
     .populate('manufacturer');
   if (!result) {
     throw new AppError(400, `Medicine with ID ${id} not updated. try again`);
+  }
+  // Check if stock is low after update
+  if (result.quantity <= LOW_STOCK_THRESHOLD) {
+    try {
+      await sendLowStockNotification(result.name, result.quantity);
+    } catch (error) {
+      console.error('Failed to send low stock notification:', error);
+    
+    }
   }
   return result;
 };

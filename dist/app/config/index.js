@@ -15,6 +15,8 @@ exports.default = {
     node_env: process.env.NODE_ENV,
     salt_rounds: process.env.SALT_ROUNDS,
     refresh_time: process.env.REFRESH_ACCESS_EXPIRES,
+    email_user: process.env.EMAIL_USER,
+    email_pass: process.env.EMAIL_PASS,
     sp: {
         sp_endpoint: process.env.SP_ENDPOINT,
         sp_username: process.env.SP_USERNAME,

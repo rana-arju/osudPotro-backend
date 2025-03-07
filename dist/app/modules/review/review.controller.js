@@ -21,7 +21,7 @@ const createReview = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const payload = req.body;
         const result = yield review_service_1.reviewServices.createNewReview(payload);
         res.json({
-            status: true,
+            success: true,
             message: 'Your review added successful',
             data: result,
         });
@@ -36,8 +36,7 @@ const getAllReview = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         success: true,
         statusCode: 200,
         message: 'Review retrieved successfully',
-        data: result === null || result === void 0 ? void 0 : result.result,
-        meta: result === null || result === void 0 ? void 0 : result.meta,
+        data: result
     });
 }));
 const deleteReview = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

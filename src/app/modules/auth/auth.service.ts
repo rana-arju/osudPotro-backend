@@ -207,7 +207,7 @@ const getUserOrders = async (userId: string) => {
   if (!userExist) {
     throw new AppError(404, 'This user not found');
   }
-  const result = await Order.find({ userId }).populate('items.productId');
+  const result = await Order.find({ user: userId }).populate('medicines.medicine').populate("user");
   return result;
 };
 export const authServices = {

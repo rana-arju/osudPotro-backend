@@ -12,16 +12,9 @@ const createNewReview = async (reviewData: IReview) => {
 
 //Get All medicine
 const getAllReviewFromDB = async (searchTerm: Record<string, unknown>) => {
-  const allReviewQuery = new QueryBuilder(Review.find(), searchTerm)
-    .search([])
-    .filter()
-    .sort()
-    .paginate()
-    .fields();
-  const result = await allReviewQuery.modelQuery;
-  const meta = await allReviewQuery.countTotal();
+ const result = await Review.find().populate("user");
 
-  return { result, meta };
+  return result;
 };
 
 const deleteSingleReview = async (id: string) => {

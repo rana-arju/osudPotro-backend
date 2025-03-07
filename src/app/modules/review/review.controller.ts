@@ -12,7 +12,7 @@ const createReview = async (
     const payload = req.body;
     const result = await reviewServices.createNewReview(payload);
     res.json({
-      status: true,
+      success: true,
       message: 'Your review added successful',
       data: result,
     });
@@ -26,8 +26,8 @@ const getAllReview = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'Review retrieved successfully',
-    data: result?.result,
-    meta: result?.meta,
+    data: result
+   
   });
 });
 

@@ -1,4 +1,5 @@
 import AppError from '../../error/AppError';
+import { Medicine } from '../medicines/medicine.schema';
 import { IManufacturer } from './Manufacturer.interface';
 import { Manufacturer } from './Manufacturer.schema';
 
@@ -8,9 +9,16 @@ const createNewManufacturer = async (payload: IManufacturer) => {
   return result;
 };
 
-//Get All medicine
+//Get All manufacturer
 const getAllManufacturerFromDB = async () => {
   const result = await Manufacturer.find();
+
+  return result;
+};
+//Get All medicine
+const getAllMedicineWithManufacturerFromDB = async (id: string) => {
+  const result = await Medicine.find({ manufacturer: id }).populate('category')
+    .populate('manufacturer');
 
   return result;
 };
@@ -23,7 +31,10 @@ const deleteSingleManufacturer = async (id: string) => {
   const result = await Manufacturer.findByIdAndDelete(id);
   return result;
 };
-const updateSingleManufacturer = async (id: string, payload: Partial<IManufacturer>) => {
+const updateSingleManufacturer = async (
+  id: string,
+  payload: Partial<IManufacturer>,
+) => {
   const manufacturer = await Manufacturer.findById(id);
   if (!manufacturer) {
     throw new AppError(404, 'This Manufacturer not found!');
@@ -46,4 +57,5 @@ export const manufacturerServices = {
   getSingleManufacturer,
   deleteSingleManufacturer,
   updateSingleManufacturer,
+  getAllMedicineWithManufacturerFromDB,
 };

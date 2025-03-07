@@ -162,7 +162,7 @@ const getUserOrders = (userId) => __awaiter(void 0, void 0, void 0, function* ()
     if (!userExist) {
         throw new AppError_1.default(404, 'This user not found');
     }
-    const result = yield orders_model_1.Order.find({ userId }).populate('items.productId');
+    const result = yield orders_model_1.Order.find({ user: userId }).populate('medicines.medicine').populate("user");
     return result;
 });
 exports.authServices = {

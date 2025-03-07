@@ -15,6 +15,7 @@ router.post(
   ManufacturerController.createManufacturer,
 );
 router.get('/', ManufacturerController.getAllManufacturer);
+router.get('/medicines/:id', ManufacturerController.getAllMedicineFromManufacturer);
 router.get(
   '/:id',
 

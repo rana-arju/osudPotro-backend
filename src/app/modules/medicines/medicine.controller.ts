@@ -21,6 +21,8 @@ const createMedicine = async (
   }
 };
 const getAllMedicine = catchAsync(async (req, res) => {
+ 
+
   const result = await MedicineServices.getAllMedicineFromDB(req.query);
   sendResponse(res, {
     success: true,
@@ -30,7 +32,6 @@ const getAllMedicine = catchAsync(async (req, res) => {
     meta: result?.meta,
   });
 });
-
 
 // Single Product get controller
 const getSingleMedicine = async (
@@ -54,8 +55,8 @@ const getSingleMedicine = async (
 };
 // student delete
 
-const deleteMedicine= catchAsync(async (req, res) => {
-  const { id} = req.params;
+const deleteMedicine = catchAsync(async (req, res) => {
+  const { id } = req.params;
 
   const result = await MedicineServices.deleteSingleMedicine(id);
   sendResponse(res, {
@@ -71,13 +72,10 @@ const updatMedicine = async (
   next: NextFunction,
 ) => {
   try {
-    const {id } = req.params;
+    const { id } = req.params;
     const payload = req.body;
 
-    const result = await MedicineServices.updateSingleMedicine(
-      id,
-      payload,
-    );
+    const result = await MedicineServices.updateSingleMedicine(id, payload);
 
     res.json({
       success: true,

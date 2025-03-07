@@ -14,15 +14,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.manufacturerServices = void 0;
 const AppError_1 = __importDefault(require("../../error/AppError"));
+const medicine_schema_1 = require("../medicines/medicine.schema");
 const Manufacturer_schema_1 = require("./Manufacturer.schema");
 //create medicine
 const createNewManufacturer = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield Manufacturer_schema_1.Manufacturer.create(payload);
     return result;
 });
-//Get All medicine
+//Get All manufacturer
 const getAllManufacturerFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield Manufacturer_schema_1.Manufacturer.find();
+    return result;
+});
+//Get All medicine
+const getAllMedicineWithManufacturerFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield medicine_schema_1.Medicine.find({ manufacturer: id }).populate('category')
+        .populate('manufacturer');
     return result;
 });
 const deleteSingleManufacturer = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,4 +62,5 @@ exports.manufacturerServices = {
     getSingleManufacturer,
     deleteSingleManufacturer,
     updateSingleManufacturer,
+    getAllMedicineWithManufacturerFromDB,
 };

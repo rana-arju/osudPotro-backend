@@ -15,8 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MedicineServices = void 0;
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const AppError_1 = __importDefault(require("../../error/AppError"));
+const emailService_1 = require("../../utils/emailService");
 const medicine_constant_1 = require("./medicine.constant");
 const medicine_schema_1 = require("./medicine.schema");
+const LOW_STOCK_THRESHOLD = 5; // Set this to your desired threshold
 //create medicine
 const createMedicineIntoDB = (medicineData) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield medicine_schema_1.Medicine.create(medicineData);
@@ -67,6 +69,15 @@ const updateSingleMedicine = (id, payload) => __awaiter(void 0, void 0, void 0, 
         .populate('manufacturer');
     if (!result) {
         throw new AppError_1.default(400, `Medicine with ID ${id} not updated. try again`);
+    }
+    // Check if stock is low after update
+    if (result.quantity <= LOW_STOCK_THRESHOLD) {
+        try {
+            yield (0, emailService_1.sendLowStockNotification)(result.name, result.quantity);
+        }
+        catch (error) {
+            console.error('Failed to send low stock notification:', error);
+        }
     }
     return result;
 });
