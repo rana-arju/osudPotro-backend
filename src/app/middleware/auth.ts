@@ -30,8 +30,9 @@ const auth = (...requiredRoles: IUserRole[]) => {
       throw new AppError(401, 'You are unauthorized to access');
     }
 
-    const { role, email } = decoded;
-    const user = await User.findOne({email});
+    const { role, userId } = decoded;
+    const user = await User.findById(userId);
+
 
     if (!user) {
       throw new AppError(404, 'User not found');

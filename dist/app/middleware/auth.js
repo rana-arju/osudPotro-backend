@@ -32,8 +32,8 @@ const auth = (...requiredRoles) => {
         catch (error) {
             throw new AppError_1.default(401, 'You are unauthorized to access');
         }
-        const { role, email } = decoded;
-        const user = yield auth_model_1.User.findOne({ email });
+        const { role, userId } = decoded;
+        const user = yield auth_model_1.User.findById(userId);
         if (!user) {
             throw new AppError_1.default(404, 'User not found');
         }
