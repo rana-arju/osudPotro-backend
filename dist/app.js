@@ -17,7 +17,10 @@ const app = (0, express_1.default)();
 //json parser
 app.use(express_1.default.json());
 // cors
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: ['http://localhost:3000', 'https://osud-potro.vercel.app'],
+    credentials: true,
+}));
 // application routes
 app.use('/api/v1/medicine', medicine_route_1.MedicineRoutes);
 app.use('/api/v1/auth', auth_route_1.authRoutes);

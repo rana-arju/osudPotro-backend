@@ -15,7 +15,12 @@ app.use(express.json());
 
 // cors
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ['http://localhost:3000', 'https://osud-potro.vercel.app'],
+    credentials: true,
+  }),
+);
 
 // application routes
 app.use('/api/v1/medicine', MedicineRoutes);
