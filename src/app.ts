@@ -8,6 +8,7 @@ import { CategoryRoutes } from './app/modules/category/category.route';
 import { notFound } from './app/middleware/notFound';
 import { globalErrorHandler } from './app/middleware/globalErrorHandler';
 import { OrderRoutes } from './app/modules/orders/orders.route';
+import { BlogRoutes } from './app/modules/blog/blog.route';
 
 const app: Application = express();
 //json parser
@@ -29,6 +30,7 @@ app.use('/api/v1/review', ReviewRoutes);
 app.use('/api/v1/manufacturer', ManufacturerRoutes);
 app.use('/api/v1/category', CategoryRoutes);
 app.use('/api/v1/order', OrderRoutes);
+app.use('/api/v1/blog', BlogRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Server is Working...');
